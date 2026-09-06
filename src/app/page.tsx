@@ -1,70 +1,164 @@
-import Link from "next/link";
+"use client";
 
-import { LatestPost } from "~/app/_components/post";
-import { auth } from "~/server/auth";
-import { api, HydrateClient } from "~/trpc/server";
-import styles from "./index.module.css";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useState } from "react";
 
-export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
-  const session = await auth();
+import styles from "~/styles/index.module.css";
 
-  if (session?.user) {
-    void api.post.getLatest.prefetch();
+export default function Home() {
+  const { data: session } = useSession();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [message, setMessage] = useState("");
+
+  async function enterClub(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setMessage("");
+    if (mode === "signup" && name.trim().length < 3) {
+      setMessage("Your name needs at least three characters.");
+      return;
+    }
+    const result = await signIn("credentials", {
+      action: mode,
+      ...(mode === "signup" ? { name } : {}),
+      email,
+      redirect: false,
+    });
+    if (result?.error) {
+      setMessage(
+        mode === "signup"
+          ? "That email is already registered, or the details are invalid."
+          : "No account found for that email. Sign up first.",
+      );
+    }
   }
 
   return (
-    <HydrateClient>
-      <main className={styles.main}>
-        <div className={styles.container}>
-          <h1 className={styles.title}>
-            Create <span className={styles.pinkSpan}>T3</span> App
-          </h1>
-          <div className={styles.cardRow}>
-            <Link
-              className={styles.card}
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className={styles.cardTitle}>First Steps →</h3>
-              <div className={styles.cardText}>
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className={styles.card}
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className={styles.cardTitle}>Documentation →</h3>
-              <div className={styles.cardText}>
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
-          </div>
-          <div className={styles.showcaseContainer}>
-            <p className={styles.showcaseText}>
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
-
-            <div className={styles.authContainer}>
-              <p className={styles.showcaseText}>
-                {session && <span>Logged in as {session.user?.name}</span>}
-              </p>
-              <Link
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
-                className={styles.loginButton}
-              >
-                {session ? "Sign out" : "Sign in"}
-              </Link>
-            </div>
-          </div>
-
-          {session?.user && <LatestPost />}
+    <main className={styles.main}>
+      <div className={styles.aurora} aria-hidden="true" />
+      <nav className={styles.nav}>
+        <span className={styles.mark}>
+          C<span>/</span>C
+        </span>
+        <span className={styles.navLabel}>Green Level / 2026</span>
+      </nav>
+      <section className={styles.hero}>
+        <div className={styles.eyebrow}>
+          <span /> After school / in session
         </div>
-      </main>
-    </HydrateClient>
+        <h1>
+          Make Something
+          <em>Unexpected.</em>
+        </h1>
+        <br />
+        <p className={styles.intro}>
+          Small club, big ideas, and people curious and capable enough to ship
+          them.
+        </p>
+        <div className={styles.orbit} aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+        <div className={styles.panel}>
+          {session?.user ? (
+            <div className={styles.welcome}>
+              <div>
+                <span className={styles.statusDot} /> You are on the list
+              </div>
+              <strong>{session.user.name}</strong>
+              <p>Your seat is saved. See you after the bell.</p>
+              <div className={styles.actions}>
+                <button
+                  className={styles.button}
+                  onClick={() => void signOut({ callbackUrl: "/" })}
+                >
+                  Log out
+                </button>
+                <button
+                  className={styles.textButton}
+                  onClick={() => void signOut({ callbackUrl: "/" })}
+                >
+                  Sign out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form className={styles.form} onSubmit={enterClub}>
+              <div className={styles.formHeading}>
+                <span className={styles.number}>01</span>
+                <div>
+                  <strong>{mode === "login" ? "Login" : "Sign up"}</strong>
+                  <small>
+                    {mode === "login"
+                      ? "Welcome back."
+                      : "No password. Just show up."}
+                  </small>
+                </div>
+              </div>
+              {mode === "signup" && (
+                <label>
+                  Name
+                  <input
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    placeholder="John Smith"
+                    autoComplete="name"
+                    required
+                    minLength={3}
+                  />
+                </label>
+              )}
+              {mode === "login" && (
+                <button
+                  type="button"
+                  className={styles.textButton}
+                  onClick={() => {
+                    setMode("signup");
+                    setMessage("");
+                  }}
+                >
+                  New here? Sign up
+                </button>
+              )}
+              <label>
+                School email
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="you@students.wcpss.net"
+                  autoComplete="email"
+                  required
+                />
+              </label>
+              <button className={styles.button} type="submit">
+                {mode === "login" ? "Log in" : "Create account"} <span>↗</span>
+              </button>
+              {message && <p className={styles.message}>{message}</p>}
+              {mode === "signup" && (
+                <button
+                  type="button"
+                  className={styles.textButton}
+                  onClick={() => {
+                    setMode("login");
+                    setMessage("");
+                  }}
+                >
+                  Already registered? Log in
+                </button>
+              )}
+            </form>
+          )}
+        </div>
+      </section>
+      <footer>
+        <span>01 — 04</span>
+        <span>
+          Build things together <b>✳</b>
+        </span>
+      </footer>
+    </main>
   );
 }

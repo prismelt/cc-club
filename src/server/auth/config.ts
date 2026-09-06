@@ -1,14 +1,10 @@
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import Credentials from "next-auth/providers/credentials";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
 
 import { db } from "~/server/db";
-import {
-  accounts,
-  sessions,
-  users,
-  verificationTokens,
-} from "~/server/db/schema";
+import { users } from "~/server/db/schema";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,15 +16,8 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      // ...other properties
-      // role: UserRole;
     } & DefaultSession["user"];
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -38,29 +27,52 @@ declare module "next-auth" {
  */
 export const authConfig = {
   providers: [
-    DiscordProvider,
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
+    Credentials({
+      id: "credentials",
+      name: "Club account",
+      credentials: {
+        action: { label: "Action", type: "text" },
+        name: { label: "Student name", type: "text" },
+        email: { label: "Student email", type: "email" },
+      },
+      authorize: async (credentials) => {
+        const action = credentials?.action === "signup" ? "signup" : "login";
+        const name =
+          typeof credentials?.name === "string" ? credentials.name.trim() : "";
+        const email =
+          typeof credentials?.email === "string"
+            ? credentials.email.trim().toLowerCase()
+            : "";
+        if (!z.string().email().safeParse(email).success) {
+          return null;
+        }
+        const user = await db.query.users.findFirst({
+          where: eq(users.email, email),
+        });
+        if (action === "login") return user ? { ...user, id: user.id } : null;
+        if (name.length < 3 || user) return null;
+        const [newUser] = await db
+          .insert(users)
+          .values({ name, email })
+          .returning();
+        return newUser ? { ...newUser, id: newUser.id } : null;
+      },
+    }),
   ],
-  adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
+  session: { strategy: "jwt" },
   callbacks: {
-    session: ({ session, user }) => ({
+    jwt: ({ token, user }) => {
+      if (user) {
+        const tokenData = token as typeof token & { id: string };
+        tokenData.id = user.id ?? "";
+      }
+      return token;
+    },
+    session: ({ session, token }) => ({
       ...session,
       user: {
         ...session.user,
-        id: user.id,
+        id: (token as typeof token & { id: string }).id,
       },
     }),
   },
