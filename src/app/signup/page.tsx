@@ -17,7 +17,7 @@ export default function SignupPage() {
       action: "signup",
       name,
       email,
-      redirect: false,
+      callbackUrl: "/home",
     });
     if (result?.error)
       setMessage(
