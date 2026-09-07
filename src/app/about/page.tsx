@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+
 import { Navbar } from "~/app/components/navbar";
 import styles from "./about.module.css";
 
@@ -28,6 +32,23 @@ const leaders = [
 ];
 
 export default function AboutPage() {
+  useEffect(() => {
+    const leaders = document.querySelectorAll<HTMLElement>("[data-leader]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            (entry.target as HTMLElement).dataset.visible = "true";
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.18 },
+    );
+    leaders.forEach((leader) => observer.observe(leader));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main className={styles.page}>
       <Navbar />
@@ -47,7 +68,8 @@ export default function AboutPage() {
         {leaders.map((leader, index) => (
           <article
             className={styles.leader}
-            style={{ "--delay": `${index * 120}ms` } as React.CSSProperties}
+            data-leader
+            data-direction={index % 2 === 0 ? "left" : "right"}
             key={leader.name}
           >
             <div className={styles.number}>0{index + 1}</div>

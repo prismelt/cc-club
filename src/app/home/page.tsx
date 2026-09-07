@@ -128,36 +128,62 @@ export default function HomePage() {
         <section className={styles.danger}>
           <h2>Delete your account</h2>
           <p>This permanently removes your profile, posts, and sessions.</p>
-          {!showDelete ? (
-            <button
-              className={styles.delete}
-              onClick={() => setShowDelete(true)}
-            >
-              Delete account
-            </button>
-          ) : (
-            <div className={styles.confirm}>
-              <p>
-                To confirm, type <b>{name}</b> below.
-              </p>
+          <button className={styles.delete} onClick={() => setShowDelete(true)}>
+            Delete account
+          </button>
+        </section>
+      </section>
+      {showDelete && (
+        <div
+          className={styles.modalBackdrop}
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setShowDelete(false);
+          }}
+        >
+          <section
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-title"
+          >
+            <div className={styles.warningIcon}>!</div>
+            <p className={styles.modalKicker}>Warning / final step</p>
+            <h2 id="delete-title">Delete your account?</h2>
+            <p className={styles.modalCopy}>
+              This action is irreversible. Your profile, posts, and active
+              sessions will be permanently removed.
+            </p>
+            <label className={styles.modalLabel}>
+              Type <b>{name}</b> to confirm
               <input
+                autoFocus
                 value={confirmation}
                 onChange={(event) => setConfirmation(event.target.value)}
                 placeholder={name}
               />
+            </label>
+            <div className={styles.modalActions}>
+              <button
+                className={styles.cancel}
+                onClick={() => {
+                  setShowDelete(false);
+                  setConfirmation("");
+                }}
+              >
+                Keep my account
+              </button>
               <button
                 className={styles.delete}
                 disabled={confirmation !== name || remove.isPending}
                 onClick={() => remove.mutate()}
               >
-                {remove.isPending
-                  ? "Deleting..."
-                  : "I understand, delete my account"}
+                {remove.isPending ? "Deleting..." : "Delete permanently"}
               </button>
             </div>
-          )}
-        </section>
-      </section>
+          </section>
+        </div>
+      )}
     </main>
   );
 }

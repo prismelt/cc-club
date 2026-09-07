@@ -9,6 +9,7 @@
   margin: auto;
   padding: 1.5rem 2.5rem;
   border-bottom: 1px solid #ffffff24;
+  animation: navIn 700ms ease both;
 }
 .logo {
   font-size: 1.35rem;
@@ -32,6 +33,17 @@
 .account a:hover,
 .account button:hover {
   color: #f37b56;
+  transform: translateY(-1px);
+}
+@keyframes navIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .account button {
   border: 0;

@@ -37,6 +37,48 @@ export default function Home() {
           </Link>
         </div>
       </section>
+      <section className={styles.explore}>
+        <div className={styles.sectionIntro}>
+          <p className={styles.eyebrow}>
+            <span /> Keep exploring
+          </p>
+          <h2>
+            There is more
+            <br />
+            <em>to make together.</em>
+          </h2>
+        </div>
+        <div className={styles.exploreGrid}>
+          <Link className={styles.exploreCard} href="/about">
+            <span>01 / People</span>
+            <strong>
+              Meet the People <b>↗</b>
+            </strong>
+            <p>Find the people making the room more interesting.</p>
+          </Link>
+          <Link className={styles.exploreCard} href="/vision">
+            <span>02 / Direction</span>
+            <strong>
+              Share Our Goals <b>↗</b>
+            </strong>
+            <p>A little something about where curiosity can take us.</p>
+          </Link>
+          <Link className={styles.exploreCard} href="/presentations">
+            <span>03 / Gatherings</span>
+            <strong>
+              See Our Meetings <b>↗</b>
+            </strong>
+            <p>Talks, show-and-tells, and ideas worth staying late for.</p>
+          </Link>
+          <Link className={styles.exploreCard} href="/resources">
+            <span>04 / Toolkit</span>
+            <strong>
+              Find More Resources <b>↗</b>
+            </strong>
+            <p>A useful shelf for your next attempt.</p>
+          </Link>
+        </div>
+      </section>
       <footer>
         <span>01 — 04</span>
         <span>

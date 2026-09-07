@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Navbar } from "~/app/components/navbar";
 import styles from "./login.module.css";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   async function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -17,8 +19,12 @@ export default function LoginPage() {
       email,
       redirect: false,
     });
-    if (result?.error)
+    if (result?.ok) {
+      router.push("/home");
+      router.refresh();
+    } else if (result?.error) {
       setMessage("No account found for that email. Sign up first.");
+    }
   }
   return (
     <main className={styles.page}>
