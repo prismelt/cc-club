@@ -47,7 +47,9 @@ export default function ResourcesPage() {
             >
               <span>{resource.type}</span>
               {resource.banner && (
-                <strong className={styles.banner}>{resource.banner}</strong>
+                <>
+                  <strong className={styles.banner}>{resource.banner}</strong>
+                </>
               )}
               <h2>{resource.title} ↗</h2>
               <p>{resource.description}</p>

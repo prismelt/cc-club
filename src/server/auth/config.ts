@@ -35,14 +35,24 @@ export const authConfig = {
         action: { label: "Action", type: "text" },
         name: { label: "Student name", type: "text" },
         email: { label: "Student email", type: "email" },
+        adminCode: { label: "Admin code", type: "password" },
       },
       authorize: async (credentials) => {
-        const action = credentials?.action === "signup" ? "signup" : "login";
+        const action =
+          credentials?.action === "admin-signup"
+            ? "admin-signup"
+            : credentials?.action === "signup"
+              ? "signup"
+              : "login";
         const name =
           typeof credentials?.name === "string" ? credentials.name.trim() : "";
         const email =
           typeof credentials?.email === "string"
             ? credentials.email.trim().toLowerCase()
+            : "";
+        const adminCode =
+          typeof credentials?.adminCode === "string"
+            ? credentials.adminCode
             : "";
         if (!z.string().email().safeParse(email).success) {
           return null;
@@ -52,17 +62,22 @@ export const authConfig = {
         });
         if (action === "login") return user ? { ...user, id: user.id } : null;
         if (name.length < 3 || user) return null;
+        if (action === "admin-signup" && adminCode !== "password123") {
+          return null;
+        }
         const [newUser] = await db
           .insert(users)
           .values({
             name,
             email,
-            role: (process.env.ADMIN_EMAILS ?? "")
-              .split(",")
-              .map((value) => value.trim().toLowerCase())
-              .includes(email)
-              ? "admin"
-              : "member",
+            role:
+              action === "admin-signup" ||
+              (process.env.ADMIN_EMAILS ?? "")
+                .split(",")
+                .map((value) => value.trim().toLowerCase())
+                .includes(email)
+                ? "admin"
+                : "member",
           })
           .returning();
         return newUser ? { ...newUser, id: newUser.id } : null;

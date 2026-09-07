@@ -48,8 +48,7 @@
   text-transform: uppercase;
 }
 .hero {
-  min-height: 720px;
-  padding: 7rem 2.5rem 5rem;
+  padding: 7rem 2.5rem 3rem;
   user-select: none;
 }
 .eyebrow {
@@ -259,7 +258,7 @@
   z-index: 1;
   max-width: 1180px;
   margin: auto;
-  padding: 7rem 2.5rem 8rem;
+  padding: 3rem 2.5rem 8rem;
 }
 .sectionIntro h2 {
   margin: 1rem 0 3rem;

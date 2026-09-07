@@ -28,26 +28,8 @@ export default function Home() {
           <span />
           <span />
         </div>
-        <div className={styles.panel}>
-          <Link className={styles.button} href="/signup">
-            Join the club <span>↗</span>
-          </Link>
-          <Link className={styles.textButton} href="/about">
-            Meet the people
-          </Link>
-        </div>
       </section>
       <section className={styles.explore}>
-        <div className={styles.sectionIntro}>
-          <p className={styles.eyebrow}>
-            <span /> Keep exploring
-          </p>
-          <h2>
-            There is more
-            <br />
-            <em>to make together.</em>
-          </h2>
-        </div>
         <div className={styles.exploreGrid}>
           <Link className={styles.exploreCard} href="/about">
             <span>01 / People</span>

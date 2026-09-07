@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 import { Navbar } from "~/app/components/navbar";
 import { api } from "~/trpc/react";
@@ -8,6 +10,11 @@ import styles from "./admin.module.css";
 
 export default function AdminPage() {
   const { data: session, status } = useSession();
+  const [pendingDelete, setPendingDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [confirmation, setConfirmation] = useState("");
   const users = api.user.list.useQuery(undefined, {
     enabled: session?.user.role === "admin",
   });
@@ -44,7 +51,13 @@ export default function AdminPage() {
         <div className={styles.roster}>
           {users.data?.map((user) => (
             <article key={user.id}>
-              <img src={user.avatar} alt="" />
+              <Image
+                src={user.avatar}
+                alt=""
+                width={44}
+                height={44}
+                unoptimized={user.avatar !== "/avatar-default.webp"}
+              />
               <div>
                 <h2>{user.name}</h2>
                 <p>{user.email}</p>
@@ -55,8 +68,11 @@ export default function AdminPage() {
               {user.id !== session.user.id && (
                 <button
                   onClick={() => {
-                    if (window.confirm(`Delete ${user.name ?? "this user"}?`))
-                      remove.mutate({ userId: user.id });
+                    setPendingDelete({
+                      id: user.id,
+                      name: user.name ?? "this user",
+                    });
+                    setConfirmation("");
                   }}
                 >
                   Delete
@@ -66,6 +82,59 @@ export default function AdminPage() {
           ))}
         </div>
       </section>
+      {pendingDelete && (
+        <div
+          className={styles.modalBackdrop}
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setPendingDelete(null);
+          }}
+        >
+          <section
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="admin-delete-title"
+          >
+            <div className={styles.warningIcon}>!</div>
+            <p className={styles.modalKicker}>Admin action / permanent</p>
+            <h2 id="admin-delete-title">Remove this account?</h2>
+            <p className={styles.modalCopy}>
+              This permanently deletes the user&apos;s profile, posts, and
+              active sessions. This cannot be undone.
+            </p>
+            <label className={styles.confirmLabel}>
+              Type <b>{pendingDelete.name}</b> to confirm
+              <input
+                autoFocus
+                value={confirmation}
+                onChange={(event) => setConfirmation(event.target.value)}
+                placeholder={pendingDelete.name}
+              />
+            </label>
+            <div className={styles.modalActions}>
+              <button
+                className={styles.cancel}
+                onClick={() => setPendingDelete(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className={styles.confirmDelete}
+                disabled={
+                  confirmation !== pendingDelete.name || remove.isPending
+                }
+                onClick={() => {
+                  void remove.mutate({ userId: pendingDelete.id });
+                  setPendingDelete(null);
+                }}
+              >
+                {remove.isPending ? "Removing..." : "Remove permanently"}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }

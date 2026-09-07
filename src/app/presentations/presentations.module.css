@@ -4,13 +4,13 @@
   background: #111316;
 }
 .content {
-  max-width: 1180px;
+  max-width: 1220px;
   margin: auto;
   padding: 6rem 2.5rem;
 }
 .kicker {
   color: #f37b56;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }

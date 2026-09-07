@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -26,6 +27,7 @@ export default function HomePage() {
   });
   const [confirmation, setConfirmation] = useState("");
   const [showDelete, setShowDelete] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
   useEffect(() => {
     if (profile.data)
       setForm({
@@ -55,75 +57,50 @@ export default function HomePage() {
       <Navbar />
       <section className={styles.content}>
         <div className={styles.heading}>
-          <p className={styles.kicker}>Your club home</p>
+          <p className={styles.kicker}>Your club home / 2026</p>
           <h1>
-            Make your
+            Welcome,
             <br />
-            <em>mark.</em>
+            <em>{name}.</em>
           </h1>
+          <p className={styles.lede}>
+            A quiet place to keep your ideas moving.
+          </p>
         </div>
-        <div className={styles.layout}>
-          <aside>
-            <img src={form.avatar || "/avatar-default.webp"} alt="" />
-            <strong>{name}</strong>
-            <span>{form.email}</span>
-            <p>
-              {form.description ||
-                "Add a little context about what you like to make."}
-            </p>
-          </aside>
-          <form
-            className={styles.form}
-            onSubmit={(event) => {
-              event.preventDefault();
-              update.mutate(form);
-            }}
-          >
-            <label>
-              Name
-              <input
-                value={form.name}
-                onChange={(event) =>
-                  setForm({ ...form, name: event.target.value })
-                }
-              />
-            </label>
-            <label>
-              Email
-              <input
-                type="email"
-                value={form.email}
-                onChange={(event) =>
-                  setForm({ ...form, email: event.target.value })
-                }
-              />
-            </label>
-            <label>
-              Avatar URL
-              <input
-                value={form.avatar}
-                onChange={(event) =>
-                  setForm({ ...form, avatar: event.target.value })
-                }
-              />
-            </label>
-            <label>
-              Description
-              <textarea
-                maxLength={500}
-                value={form.description}
-                onChange={(event) =>
-                  setForm({ ...form, description: event.target.value })
-                }
-              />
-            </label>
-            <button disabled={update.isPending}>
-              {update.isPending ? "Saving..." : "Save changes"}
+        <div className={styles.profileStage}>
+          <div className={`${styles.signal} ${styles.signalOne}`}>
+            01 / CURIOUS
+          </div>
+          <div className={`${styles.signal} ${styles.signalTwo}`}>
+            BUILD / SHARE
+          </div>
+          <div className={styles.profileOrb} aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className={styles.profileCard}>
+            <Image
+              className={styles.avatar}
+              src={form.avatar || "/avatar-default.webp"}
+              alt=""
+              width={128}
+              height={128}
+              unoptimized={form.avatar !== "/avatar-default.webp"}
+            />
+            <div>
+              <span className={styles.cardLabel}>Member profile</span>
+              <h2>{name}</h2>
+              <p>{form.description || "Still deciding what to make next."}</p>
+              <span className={styles.email}>{form.email}</span>
+            </div>
+            <button
+              className={styles.updateButton}
+              onClick={() => setShowEditor(true)}
+            >
+              Update info <span>↗</span>
             </button>
-            {update.error && (
-              <p className={styles.error}>{update.error.message}</p>
-            )}
-          </form>
+          </div>
         </div>
         <section className={styles.danger}>
           <h2>Delete your account</h2>
@@ -133,6 +110,84 @@ export default function HomePage() {
           </button>
         </section>
       </section>
+      {showEditor && (
+        <div
+          className={styles.modalBackdrop}
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setShowEditor(false);
+          }}
+        >
+          <section
+            className={`${styles.modal} ${styles.editorModal}`}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="editor-title"
+          >
+            <button
+              className={styles.close}
+              aria-label="Close update form"
+              onClick={() => setShowEditor(false)}
+            >
+              ×
+            </button>
+            <p className={styles.modalKicker}>Profile / edit</p>
+            <h2 id="editor-title">Update your info.</h2>
+            <form
+              className={styles.form}
+              onSubmit={(event) => {
+                event.preventDefault();
+                update.mutate(form, { onSuccess: () => setShowEditor(false) });
+              }}
+            >
+              <label>
+                Name
+                <input
+                  value={form.name}
+                  onChange={(event) =>
+                    setForm({ ...form, name: event.target.value })
+                  }
+                />
+              </label>
+              <label>
+                Email
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(event) =>
+                    setForm({ ...form, email: event.target.value })
+                  }
+                />
+              </label>
+              <label>
+                Avatar URL
+                <input
+                  value={form.avatar}
+                  onChange={(event) =>
+                    setForm({ ...form, avatar: event.target.value })
+                  }
+                />
+              </label>
+              <label>
+                Description
+                <textarea
+                  maxLength={500}
+                  value={form.description}
+                  onChange={(event) =>
+                    setForm({ ...form, description: event.target.value })
+                  }
+                />
+              </label>
+              <button className={styles.saveButton} disabled={update.isPending}>
+                {update.isPending ? "Saving..." : "Save changes"}
+              </button>
+              {update.error && (
+                <p className={styles.error}>{update.error.message}</p>
+              )}
+            </form>
+          </section>
+        </div>
+      )}
       {showDelete && (
         <div
           className={styles.modalBackdrop}
@@ -176,7 +231,7 @@ export default function HomePage() {
               <button
                 className={styles.delete}
                 disabled={confirmation !== name || remove.isPending}
-                onClick={() => remove.mutate()}
+                onClick={() => void remove.mutate()}
               >
                 {remove.isPending ? "Deleting..." : "Delete permanently"}
               </button>

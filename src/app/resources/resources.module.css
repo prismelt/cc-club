@@ -34,6 +34,7 @@
   min-height: 250px;
   padding: 1.5rem;
   border: 1px solid #ffffff2b;
+  border-radius: 7.5px;
   background: #ffffff08;
   transition:
     transform 0.25s,
@@ -51,17 +52,14 @@
 }
 .resource .banner {
   display: inline-block;
-  margin: 0.9rem 0 0;
+  margin-left: 0.5rem;
   padding: 0.38rem 0.55rem;
-  color: #1b1613;
+  color: #fff7ed;
   background: #f37b56;
   font-size: 0.62rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-.resource:nth-child(2) .banner {
-  background: #e95d3f;
-  color: #fff7ed;
+  border-radius: 2.5px;
 }
 .resource h2 {
   margin: 2.5rem 0 1rem;

@@ -19,10 +19,10 @@ export default function LoginPage() {
       email,
       redirect: false,
     });
-    if (result?.ok) {
+    if (result?.ok === true) {
       router.push("/home");
       router.refresh();
-    } else if (result?.error) {
+    } else {
       setMessage("No account found for that email. Sign up first.");
     }
   }

@@ -7,27 +7,27 @@ import styles from "./about.module.css";
 
 const leaders = [
   {
-    name: "Maya Chen",
+    name: "Dummy Dummy 1",
     role: "Faculty advisor",
     description:
       "Keeps the room curious, generous, and pointed at real problems.",
-    contact: "maya.chen@wcpss.net",
+    contact: "Dummy.Dummy@wcpss.net",
     quote: "The best project is the one that changes the question.",
   },
   {
-    name: "Theo Brooks",
+    name: "Dummy Dummy 2",
     role: "Club president",
     description:
       "Builds the prototypes that turn a loose idea into something you can touch.",
-    contact: "theo.brooks@students.wcpss.net",
-    quote: "We do not wait for permission to make a first version.",
+    contact: "Dummy.Dummy@students.wcpss.net",
+    quote: "-----------------------------------------",
   },
   {
-    name: "Iris Patel",
+    name: "Dummy Dummy 3",
     role: "Community lead",
     description:
       "Makes sure every new voice has a place at the table and a way into the work.",
-    contact: "iris.patel@students.wcpss.net",
+    contact: "Dummy.Dummy@students.wcpss.net",
   },
 ];
 

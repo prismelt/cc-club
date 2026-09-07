@@ -1,0 +1,100 @@
+.page {
+  min-height: 100vh;
+  color: #f5f0e8;
+  background:
+    radial-gradient(circle at 78% 16%, #e95d3f55, transparent 28%), #111316;
+}
+.panel {
+  width: min(100% - 2.5rem, 560px);
+  margin: 6rem auto;
+  animation: rise 650ms ease both;
+}
+.kicker {
+  color: #e95d3f;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.panel h1 {
+  margin: 1rem 0 1.2rem;
+  font-size: clamp(4rem, 11vw, 7.5rem);
+  line-height: 0.84;
+  letter-spacing: -0.07em;
+}
+.panel h1 em {
+  color: #f3d76b;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+.intro {
+  max-width: 360px;
+  color: #9c9e99;
+  line-height: 1.55;
+}
+.panel form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  margin-top: 3rem;
+}
+.panel label {
+  color: #aaa9a2;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.panel input {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.8rem 0;
+  border: 0;
+  border-bottom: 1px solid #ffffff38;
+  outline: 0;
+  color: #fff;
+  background: transparent;
+  font: inherit;
+}
+.panel input:focus {
+  border-color: #f3d76b;
+}
+.panel button {
+  padding: 0.95rem 1.1rem;
+  border: 0;
+  color: #111316;
+  background: #f3d76b;
+  cursor: pointer;
+  font-weight: 800;
+  box-shadow: 0 7px 0 #a7862d;
+}
+.panel button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 0 #a7862d;
+}
+.panel button span {
+  float: right;
+  font-size: 1.1rem;
+}
+.message {
+  color: #f37b56;
+  font-size: 0.8rem;
+}
+.back {
+  display: inline-block;
+  margin-top: 2rem;
+  color: #9c9e99;
+  font-size: 0.82rem;
+}
+.back:hover {
+  color: #f5f0e8;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
