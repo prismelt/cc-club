@@ -6,12 +6,6 @@ import { z } from "zod";
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 
-/**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- */
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
@@ -21,11 +15,16 @@ declare module "next-auth" {
   }
 }
 
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
+const credentialsSchema = z.object({
+  action: z
+    .enum(["login", "signup", "admin-signup"])
+    .optional()
+    .default("login"),
+  name: z.string().optional().default(""),
+  email: z.string().email(),
+  adminCode: z.string().optional().default(""),
+});
+
 export const authConfig = {
   providers: [
     Credentials({
@@ -37,50 +36,77 @@ export const authConfig = {
         email: { label: "Student email", type: "email" },
         adminCode: { label: "Admin code", type: "password" },
       },
-      authorize: async (credentials) => {
-        const action =
-          credentials?.action === "admin-signup"
-            ? "admin-signup"
-            : credentials?.action === "signup"
-              ? "signup"
-              : "login";
-        const name =
-          typeof credentials?.name === "string" ? credentials.name.trim() : "";
-        const email =
-          typeof credentials?.email === "string"
-            ? credentials.email.trim().toLowerCase()
-            : "";
-        const adminCode =
-          typeof credentials?.adminCode === "string"
-            ? credentials.adminCode
-            : "";
-        if (!z.string().email().safeParse(email).success) {
+      authorize: async (rawCredentials) => {
+        const parsed = credentialsSchema.safeParse({
+          ...rawCredentials,
+          email:
+            typeof rawCredentials?.email === "string"
+              ? rawCredentials.email.trim().toLowerCase()
+              : "",
+          name:
+            typeof rawCredentials?.name === "string"
+              ? rawCredentials.name.trim()
+              : "",
+        });
+
+        if (!parsed.success) {
           return null;
         }
-        const user = await db.query.users.findFirst({
+
+        const { action, name, email, adminCode } = parsed.data;
+
+        const existingUser = await db.query.users.findFirst({
           where: eq(users.email, email),
         });
-        if (action === "login") return user ? { ...user, id: user.id } : null;
-        if (name.length < 3 || user) return null;
+
+        if (action === "login") {
+          if (!existingUser?.id) {
+            return null;
+          }
+          return {
+            id: String(existingUser.id),
+            name: existingUser.name,
+            email: existingUser.email,
+            role: existingUser.role ?? "member",
+          };
+        }
+
+        if (name.length < 3 || existingUser) {
+          return null;
+        }
+
         if (action === "admin-signup" && adminCode !== "password123") {
           return null;
         }
+
+        const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+          .split(",")
+          .map((value) => value.trim().toLowerCase());
+
+        const role =
+          action === "admin-signup" || adminEmails.includes(email)
+            ? "admin"
+            : "member";
+
         const [newUser] = await db
           .insert(users)
           .values({
             name,
             email,
-            role:
-              action === "admin-signup" ||
-              (process.env.ADMIN_EMAILS ?? "")
-                .split(",")
-                .map((value) => value.trim().toLowerCase())
-                .includes(email)
-                ? "admin"
-                : "member",
+            role,
           })
           .returning();
-        return newUser ? { ...newUser, id: newUser.id } : null;
+
+        if (!newUser?.id) {
+          return null;
+        }
+
+        return {
+          id: String(newUser.id),
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.role ?? "member",
+        };
       },
     }),
   ],
@@ -88,10 +114,9 @@ export const authConfig = {
   callbacks: {
     jwt: ({ token, user }) => {
       if (user) {
-        const tokenData = token as typeof token & { id: string; role: string };
         const userData = user as typeof user & { role?: string };
-        tokenData.id = user.id ?? "";
-        tokenData.role = userData.role ?? "member";
+        token.id = user.id ?? "";
+        token.role = userData.role ?? "member";
       }
       return token;
     },
@@ -99,8 +124,8 @@ export const authConfig = {
       ...session,
       user: {
         ...session.user,
-        id: (token as typeof token & { id: string }).id,
-        role: (token as typeof token & { role: string }).role ?? "member",
+        id: (token.id as string) ?? "",
+        role: (token.role as string) ?? "member",
       },
     }),
   },

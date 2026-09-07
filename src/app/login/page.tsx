@@ -12,20 +12,29 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setMessage("");
+    setLoading(true);
+
     const result = await signIn("credentials", {
       action: "login",
       email,
       redirect: false,
     });
-    if (result?.ok === true) {
+
+    setLoading(false);
+
+    if (result?.ok && !result?.error) {
       router.push("/home");
       router.refresh();
     } else {
       setMessage("No account found for that email. Sign up first.");
     }
   }
+
   return (
     <main className={styles.page}>
       <Navbar />
@@ -43,8 +52,8 @@ export default function LoginPage() {
               placeholder="you@students.wcpss.net"
             />
           </label>
-          <button type="submit">
-            Enter the club <span>↗</span>
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Enter the club"} <span>↗</span>
           </button>
           {message && <p className={styles.message}>{message}</p>}
         </form>
