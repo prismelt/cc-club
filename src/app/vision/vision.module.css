@@ -1,0 +1,52 @@
+.page {
+  min-height: 100vh;
+  color: #f5f0e8;
+  background:
+    radial-gradient(circle at 75% 20%, #224c53, transparent 28%), #111316;
+}
+.content {
+  max-width: 1180px;
+  margin: auto;
+  padding: 7rem 2.5rem;
+}
+.kicker {
+  color: #f37b56;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.content h1 {
+  margin: 1rem 0 4rem;
+  font-size: clamp(4rem, 10vw, 9rem);
+  line-height: 0.88;
+  letter-spacing: -0.07em;
+}
+.content h1 em {
+  color: #79bfc0;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+.copy {
+  max-width: 430px;
+  margin-left: 30%;
+  color: #b7b7ae;
+  line-height: 1.7;
+}
+.statement {
+  margin-top: 7rem;
+  color: #f3d76b;
+  font-family: Georgia, serif;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: 0.9;
+}
+.statement span {
+  color: #f37b56;
+}
+@media (max-width: 700px) {
+  .content {
+    padding: 5rem 1.2rem;
+  }
+  .copy {
+    margin-left: 0;
+  }
+}

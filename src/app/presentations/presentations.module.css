@@ -1,0 +1,74 @@
+.page {
+  min-height: 100vh;
+  color: #f5f0e8;
+  background: #111316;
+}
+.content {
+  max-width: 1180px;
+  margin: auto;
+  padding: 6rem 2.5rem;
+}
+.kicker {
+  color: #f37b56;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.content h1 {
+  margin: 1.2rem 0 5rem;
+  font-size: clamp(3.8rem, 9vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+.content h1 em {
+  color: #f3d76b;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+.list {
+  border-top: 1px solid #ffffff35;
+}
+.talk {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid #ffffff24;
+  transition:
+    padding 0.25s,
+    color 0.25s;
+}
+.talk:hover {
+  padding-left: 1rem;
+  color: #f37b56;
+}
+.talk > span,
+.talk p {
+  color: #9c9e99;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.talk h2 {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2.5rem);
+}
+.talk p {
+  margin-bottom: 0;
+}
+.talk b {
+  color: #f3d76b;
+  font-size: 1.5rem;
+}
+@media (max-width: 700px) {
+  .content {
+    padding: 5rem 1.2rem;
+  }
+  .talk {
+    grid-template-columns: 1fr auto;
+  }
+  .talk > span {
+    grid-column: 1 / -1;
+  }
+}

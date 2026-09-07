@@ -45,6 +45,12 @@ export const users = createTable(
       .$defaultFn(() => crypto.randomUUID()),
     name: d.varchar({ length: 255 }),
     email: d.varchar({ length: 255 }).notNull(),
+    description: d.text().notNull().default(""),
+    avatar: d
+      .varchar({ length: 255 })
+      .notNull()
+      .default("/avatar-default.webp"),
+    role: d.varchar({ length: 32 }).notNull().default("member"),
     emailVerified: d
       .timestamp({
         mode: "date",

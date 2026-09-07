@@ -1,0 +1,88 @@
+.page {
+  min-height: 100vh;
+  color: #f5f0e8;
+  background:
+    radial-gradient(circle at 80% 15%, #224c53, transparent 30%), #111316;
+}
+.page > p {
+  padding: 5rem 2.5rem;
+}
+.content {
+  max-width: 1180px;
+  margin: auto;
+  padding: 5rem 2.5rem;
+}
+.empty {
+  max-width: 1180px;
+  margin: auto;
+  padding: 8rem 2.5rem;
+}
+.kicker {
+  color: #79bfc0;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.content h1,
+.empty h1 {
+  margin: 1rem 0 4rem;
+  font-size: clamp(4rem, 10vw, 8rem);
+  line-height: 0.86;
+  letter-spacing: -0.07em;
+}
+.content h1 em,
+.empty h1 em {
+  color: #79bfc0;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+.roster {
+  border-top: 1px solid #ffffff35;
+}
+.roster article {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #ffffff24;
+}
+.roster article img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.roster article h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+.roster article p,
+.roster article small {
+  margin: 0;
+  color: #9c9e99;
+  font-size: 0.75rem;
+}
+.roster article small {
+  display: block;
+  margin-top: 0.35rem;
+}
+.roster article button {
+  border: 0;
+  color: #e95d3f;
+  background: transparent;
+  cursor: pointer;
+}
+@media (max-width: 700px) {
+  .content,
+  .empty {
+    padding: 4rem 1.2rem;
+  }
+  .roster article {
+    grid-template-columns: 42px 1fr;
+  }
+  .roster article button {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

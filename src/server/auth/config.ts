@@ -16,6 +16,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      role: string;
     } & DefaultSession["user"];
   }
 }
@@ -53,7 +54,16 @@ export const authConfig = {
         if (name.length < 3 || user) return null;
         const [newUser] = await db
           .insert(users)
-          .values({ name, email })
+          .values({
+            name,
+            email,
+            role: (process.env.ADMIN_EMAILS ?? "")
+              .split(",")
+              .map((value) => value.trim().toLowerCase())
+              .includes(email)
+              ? "admin"
+              : "member",
+          })
           .returning();
         return newUser ? { ...newUser, id: newUser.id } : null;
       },
@@ -63,8 +73,10 @@ export const authConfig = {
   callbacks: {
     jwt: ({ token, user }) => {
       if (user) {
-        const tokenData = token as typeof token & { id: string };
+        const tokenData = token as typeof token & { id: string; role: string };
+        const userData = user as typeof user & { role?: string };
         tokenData.id = user.id ?? "";
+        tokenData.role = userData.role ?? "member";
       }
       return token;
     },
@@ -73,6 +85,7 @@ export const authConfig = {
       user: {
         ...session.user,
         id: (token as typeof token & { id: string }).id,
+        role: (token as typeof token & { role: string }).role ?? "member",
       },
     }),
   },

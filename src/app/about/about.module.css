@@ -1,0 +1,99 @@
+.page {
+  min-height: 100vh;
+  color: #f5f0e8;
+  background: #111316;
+}
+.intro,
+.grid {
+  max-width: 1180px;
+  margin: auto;
+  padding: 6rem 2.5rem 2rem;
+}
+.kicker,
+.role {
+  color: #f37b56;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.intro h1 {
+  margin: 1.2rem 0;
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+.intro h1 em {
+  color: #f37b56;
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+.lede {
+  max-width: 420px;
+  color: #b7b7ae;
+  line-height: 1.6;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding-top: 4rem;
+  padding-bottom: 6rem;
+}
+.leader {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.2rem;
+  padding: 1.4rem;
+  border-top: 1px solid #ffffff38;
+  animation: rise 0.7s var(--delay) both;
+}
+.number {
+  color: #f3d76b;
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+}
+.leader h2 {
+  margin: 0.5rem 0;
+  font-size: 1.8rem;
+}
+.role {
+  margin: 0;
+  color: #79bfc0;
+  font-size: 0.62rem;
+}
+.description {
+  min-height: 5rem;
+  color: #b7b7ae;
+  line-height: 1.5;
+}
+.leader a {
+  color: #f37b56;
+  font-size: 0.75rem;
+  word-break: break-word;
+}
+.leader blockquote {
+  margin: 2rem 0 0;
+  color: #f3d76b;
+  font-family: Georgia, serif;
+  line-height: 1.4;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 780px) {
+  .intro,
+  .grid {
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

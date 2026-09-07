@@ -1,0 +1,83 @@
+.page {
+  min-height: 100vh;
+  color: #f5f0e8;
+  background:
+    radial-gradient(circle at 20% 20%, #224c53, transparent 28%), #111316;
+}
+.panel {
+  max-width: 520px;
+  margin: 8rem auto;
+  padding: 0 2rem;
+  animation: rise 0.7s ease both;
+}
+.kicker {
+  color: #79bfc0;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.panel h1 {
+  margin: 1rem 0 3rem;
+  font-size: clamp(4rem, 12vw, 8rem);
+  line-height: 0.85;
+  letter-spacing: -0.07em;
+}
+.panel label {
+  display: block;
+  margin-bottom: 1.5rem;
+  color: #aaa9a2;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.panel input {
+  display: block;
+  width: 100%;
+  margin-top: 0.7rem;
+  padding: 1rem 0;
+  border: 0;
+  border-bottom: 1px solid #ffffff44;
+  outline: 0;
+  color: #f5f0e8;
+  background: transparent;
+  font: inherit;
+}
+.panel input:focus {
+  border-color: #79bfc0;
+}
+.panel button {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 1rem;
+  border: 0;
+  color: #111316;
+  background: #79bfc0;
+  cursor: pointer;
+  font-weight: 800;
+}
+.panel button span {
+  float: right;
+  font-size: 1.2rem;
+}
+.message {
+  color: #f3d76b;
+  font-size: 0.8rem;
+}
+.switch {
+  margin-top: 2rem;
+  color: #9c9e99;
+  font-size: 0.85rem;
+}
+.switch a {
+  color: #79bfc0;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
