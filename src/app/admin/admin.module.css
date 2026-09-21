@@ -98,7 +98,7 @@
   place-items: center;
   color: #111316;
   background: #f3d76b;
-  font-weight: 800;
+  font-weight: 600;
 }
 .modalKicker {
   margin: 1.5rem 0 0.6rem;
@@ -163,7 +163,7 @@
   border: 0;
   color: #fff7ed;
   background: #e95d3f;
-  font-weight: 800;
+  font-weight: 600;
 }
 .confirmDelete:hover {
   background: #f37b56;

@@ -20,6 +20,7 @@
   font-size: clamp(4rem, 10vw, 9rem);
   line-height: 0.88;
   letter-spacing: -0.07em;
+  user-select: none;
 }
 .content h1 em {
   color: #79bfc0;

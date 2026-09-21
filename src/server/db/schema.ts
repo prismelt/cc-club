@@ -62,8 +62,98 @@ export const users = createTable(
   (t) => [uniqueIndex("user_email_idx").on(t.email)],
 );
 
+export const presentations = createTable(
+  "presentation",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    name: d.varchar({ length: 255 }).notNull(),
+    presenterName: d.varchar({ length: 255 }).notNull().default(""),
+    link: d.text().notNull(),
+    publishedAt: d.timestamp({ withTimezone: true }).notNull(),
+    createdById: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => users.id),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+  }),
+  (t) => [index("presentation_published_at_idx").on(t.publishedAt)],
+);
+
+export const aboutMembers = createTable(
+  "about_member",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    position: d.varchar({ length: 255 }).notNull(),
+    name: d.varchar({ length: 255 }).notNull(),
+    description: d.text().notNull().default(""),
+    email: d.varchar({ length: 255 }).notNull().default(""),
+    quote: d.text().notNull().default(""),
+    createdById: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => users.id),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+  }),
+  (t) => [index("about_member_position_idx").on(t.position)],
+);
+
+export const resources = createTable(
+  "resource",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    type: d.varchar({ length: 32 }).notNull().default("guide"),
+    brand: d.varchar({ length: 32 }).notNull().default("none"),
+    name: d.varchar({ length: 255 }).notNull(),
+    link: d.text().notNull(),
+    description: d.text().notNull().default(""),
+    createdById: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => users.id),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+  }),
+  (t) => [
+    index("resource_type_idx").on(t.type),
+    index("resource_brand_idx").on(t.brand),
+    index("resource_name_idx").on(t.name),
+  ],
+);
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
+  presentations: many(presentations),
+  aboutMembers: many(aboutMembers),
+  resources: many(resources),
+}));
+
+export const presentationsRelations = relations(presentations, ({ one }) => ({
+  createdBy: one(users, {
+    fields: [presentations.createdById],
+    references: [users.id],
+  }),
+}));
+
+export const aboutMembersRelations = relations(aboutMembers, ({ one }) => ({
+  createdBy: one(users, {
+    fields: [aboutMembers.createdById],
+    references: [users.id],
+  }),
+}));
+
+export const resourcesRelations = relations(resources, ({ one }) => ({
+  createdBy: one(users, {
+    fields: [resources.createdById],
+    references: [users.id],
+  }),
 }));
 
 export const accounts = createTable(

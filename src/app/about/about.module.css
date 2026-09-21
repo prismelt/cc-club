@@ -9,6 +9,46 @@
   margin: auto;
   padding: 6rem 2.5rem 2rem;
 }
+.headingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+}
+.primaryButton,
+.cancelButton,
+.submitButton,
+.deleteButton,
+.deleteConfirmButton {
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+.primaryButton {
+  align-self: flex-start;
+  padding: 0.9rem 1.45rem;
+  border: 1px solid rgba(243, 215, 107, 0.8);
+  border-radius: 999px;
+  color: #111316;
+  background: linear-gradient(135deg, #f3d76b 0%, #f9e8a3 100%);
+  box-shadow: 0 12px 26px rgba(243, 215, 107, 0.2);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.deleteButton {
+  justify-self: end;
+  align-self: start;
+  margin-top: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid rgba(255, 120, 103, 0.7);
+  border-radius: 999px;
+  background: rgba(233, 93, 63, 0.12);
+  color: #ffd9d3;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 .kicker,
 .role {
   color: #f37b56;
@@ -21,6 +61,7 @@
   font-size: clamp(3.5rem, 9vw, 8rem);
   line-height: 0.9;
   letter-spacing: -0.06em;
+  user-select: none;
 }
 .intro h1 em {
   color: #f37b56;
@@ -104,11 +145,125 @@
   font-family: Georgia, serif;
   line-height: 1.4;
 }
+.emptyState {
+  color: #b7b7ae;
+  padding: 1rem 0 3rem;
+}
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(8, 10, 12, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+.modal,
+.confirmModal {
+  width: min(100%, 620px);
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(180deg, #1b1d20 0%, #14171a 100%);
+  box-shadow: 12px 12px 0 #f37b56;
+}
+.confirmModal {
+  box-shadow: 12px 12px 0 #e95d3f;
+}
+.warningBadge {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  background: #f3d76b;
+  color: #111316;
+  font-weight: 900;
+}
+.modalCopy {
+  color: #c7c7bf;
+  line-height: 1.6;
+}
+.modalCopy b {
+  color: #f5f0e8;
+}
+.modalKicker {
+  margin: 0 0 0.8rem;
+  color: #f37b56;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.modal h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+.form {
+  margin-top: 1.5rem;
+}
+.field {
+  display: block;
+  margin-top: 1rem;
+  color: #d9d5cd;
+  font-size: 0.78rem;
+}
+.field input,
+.field textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #ffffff35;
+  background: #111316;
+  color: #f5f0e8;
+  font: inherit;
+  resize: vertical;
+}
+.field textarea {
+  min-height: 120px;
+}
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #f3d76b;
+}
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+.cancelButton,
+.submitButton,
+.deleteConfirmButton {
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+}
+.cancelButton {
+  border: 1px solid #ffffff35;
+  color: #d9d5cd;
+  background: transparent;
+}
+.submitButton,
+.deleteConfirmButton {
+  color: #111316;
+  background: linear-gradient(135deg, #f3d76b 0%, #f7e8a9 100%);
+  font-weight: 700;
+}
+.submitButton:disabled,
+.deleteConfirmButton:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
 @media (max-width: 780px) {
   .intro,
   .grid {
     padding-left: 1.2rem;
     padding-right: 1.2rem;
+  }
+  .headingRow {
+    flex-direction: column;
+    align-items: flex-start;
   }
   .leader {
     grid-template-columns: 44px minmax(0, 1fr);
@@ -118,5 +273,11 @@
   }
   .leader[data-direction="right"] {
     align-self: stretch;
+  }
+  .modalActions {
+    flex-direction: column-reverse;
+  }
+  .modalActions button {
+    width: 100%;
   }
 }

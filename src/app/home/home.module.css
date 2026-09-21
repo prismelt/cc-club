@@ -99,7 +99,7 @@
   color: #111316;
   background: #f37b56;
   cursor: pointer;
-  font-weight: 800;
+  font-weight: 600;
   box-shadow: 0 6px 0 #9e432f;
 }
 .updateButton:hover,
@@ -271,7 +271,7 @@
   color: #111316;
   background: #f37b56;
   cursor: pointer;
-  font-weight: 800;
+  font-weight: 600;
 }
 .form button:disabled {
   cursor: wait;
@@ -331,7 +331,7 @@
   place-items: center;
   color: #111316;
   background: #f3d76b;
-  font-weight: 800;
+  font-weight: 600;
 }
 .modalKicker {
   margin: 1.5rem 0 0.6rem;
