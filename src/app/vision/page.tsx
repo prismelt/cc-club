@@ -37,7 +37,7 @@ export default function VisionPage() {
           </article>
 
           <article className={styles.section}>
-            <h2>What we've done</h2>
+            <h2>What we&apos;ve done</h2>
             <ul className={styles.list}>
               <li>UCLA Codesprint</li>
               <li>Portfolio Project</li>
