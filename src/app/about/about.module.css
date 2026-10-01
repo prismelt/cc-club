@@ -93,6 +93,9 @@
     opacity 700ms ease,
     transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+.leader:not(:has(blockquote)) {
+  padding-bottom: 0;
+}
 .leader[data-direction="left"] {
   transform: translateX(-90px);
 }
@@ -130,7 +133,6 @@
   font-size: 0.62rem;
 }
 .description {
-  min-height: 5rem;
   color: #b7b7ae;
   line-height: 1.5;
 }

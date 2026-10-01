@@ -74,7 +74,7 @@ export default function AboutPage() {
     const email = form.email.trim();
     const quote = form.quote.trim();
 
-    if (!position || !name || !description) {
+    if (!position || !name) {
       return;
     }
 
@@ -127,7 +127,9 @@ export default function AboutPage() {
             <div>
               <p className={styles.role}>{leader.position}</p>
               <h2>{leader.name}</h2>
-              <p className={styles.description}>{leader.description}</p>
+              {leader.description && (
+                <p className={styles.description}>{leader.description}</p>
+              )}
               {leader.email && (
                 <a href={`mailto:${leader.email}`}>{leader.email}</a>
               )}
@@ -262,7 +264,6 @@ export default function AboutPage() {
               <label className={styles.field}>
                 Description
                 <textarea
-                  required
                   value={form.description}
                   onChange={(event) =>
                     setForm((current) => ({

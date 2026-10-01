@@ -20,7 +20,7 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
 export const aboutMemberInput = z.object({
   position: z.string().trim().min(1, "Position is required").max(255),
   name: z.string().trim().min(1, "Name is required").max(255),
-  description: z.string().trim().min(1, "Description is required").max(500),
+  description: z.string().trim().max(500).optional().default(""),
   email: z.string().trim().max(255).optional().default(""),
   quote: z.string().trim().max(500).optional().default(""),
 });
